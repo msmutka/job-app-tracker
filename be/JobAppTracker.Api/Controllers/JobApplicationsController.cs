@@ -33,6 +33,7 @@ namespace JobAppTracker.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<JobApplication>> Create(JobApplication job)
         {
+            Console.WriteLine("jsem tuuuu");
             job.Id = Guid.NewGuid();
             job.AppliedOn = DateTime.UtcNow;
             _context.JobApplications.Add(job);
