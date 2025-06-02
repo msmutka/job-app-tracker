@@ -7,13 +7,35 @@ export async function getAllJobs(): Promise<JobApplication[]> {
   return await res.json()
 }
 
-export async function addJob(job: JobApplication) {
-  console.log(job);
-  console.log(JSON.stringify(job))
+export async function getJob (id: string): Promise<JobApplication> {
+  console.log(id);
   
-  return fetch(API_BASE, {
+  const res = await fetch(`${API_BASE}/${id}`);
+  return await res.json()
+}
+
+export async function addJob(job: JobApplication): Promise<boolean> {
+  var res = await fetch(API_BASE, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(job)
   })
+
+  return res.ok
+}
+
+export async function updateJob(job: JobApplication): Promise<boolean> {
+  const res = await fetch(`${API_BASE}/${job.id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(job),
+  });
+  return res.ok;
+}
+
+export async function deleteJob(id: string): Promise<boolean> {
+  const res = await fetch(`${API_BASE}/${id}`, {
+    method: 'DELETE',
+  });
+  return res.ok;
 }

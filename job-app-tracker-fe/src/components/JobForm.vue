@@ -1,7 +1,7 @@
 <template>
   <div class="container mt-4">
     <h2>Add Job</h2>
-    <form @submit.prevent="submit">
+    <form @submit.prevent="submit" v-if="!loading">
       <div class="mb-3">
         <label class="form-label">Company</label>
         <input class="form-control" v-model="job.company" required />
@@ -35,19 +35,30 @@
       <button class="btn btn-success">Submit</button>
       <router-link class="btn btn-secondary ms-2" to="/">Cancel</router-link>
     </form>
+    <div v-if="loading" class="position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-white bg-opacity-75">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import type { JobApplication } from './../types/JobApplication'
-import { addJob } from './../services/jobService'
+import { ref, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import type { JobApplication } from '../types/JobApplication'
+import * as jobService from '../services/jobService'
 
 const router = useRouter()
+const route = useRoute();
+
+const isEdit = ref(false);
+let loading = ref(false);
+const jobId = ref<string | undefined>();
 
 const job = ref<JobApplication>({
-  id: null,
+  id: undefined,
   company: '',
   title: '',
   stage: 'applied',
@@ -57,7 +68,33 @@ const job = ref<JobApplication>({
 })
 
 async function submit() {
-  await addJob(job.value)
-  router.push('/')
+  let success = false;
+
+  if (isEdit.value && jobId.value !== null) {
+    success = await jobService.updateJob({ ...job.value, id: jobId.value });
+  } else {
+    success = await jobService.addJob({ ...job.value, id: undefined});
+  }
+
+  if (success) router.push('/');
+  else alert('Failed to save job');
 }
+
+onMounted(async () => {  
+  if (route.params.id) {
+    isEdit.value = true;
+    loading.value = true;
+    jobId.value = String(route.params.id);
+
+    try {
+      var res = await jobService.getJob(jobId.value)
+
+      Object.assign(job.value, res)
+    } catch (err) {
+      alert(err)
+    } finally {
+      loading.value = false
+    }
+  }
+});
 </script>
