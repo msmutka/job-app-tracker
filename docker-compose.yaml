@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  api:
+    build: ./be/JobAppTracker.Api
+    ports:
+      - "5000:80"
+    environment:
+      - ConnectionStrings__DefaultConnection=${DB_CONNECTION}
+      - AzureServiceBus__ConnectionString=${SERVICE_BUS_CONNECTION}
+
+  frontend:
+    build: ./job-app-tracker-fe
+    ports:
+      - "8080:80"

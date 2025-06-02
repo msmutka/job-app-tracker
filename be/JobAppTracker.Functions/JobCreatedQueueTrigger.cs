@@ -18,6 +18,7 @@ public class JobCreatedQueueTrigger
     {
         _logger.LogInformation($"Received message from Service Bus: {message}");
 
+        // TODO send an e-mail
         var job = JsonSerializer.Deserialize<JobApplication>(message);
         _logger.LogInformation($"Parsed job title: {job?.Title}");
     }
