@@ -1,5 +1,5 @@
 export interface JobApplication {
-  id: number
+  id?: number|null
   company: string
   title: string
   stage: 'applied' | 'interviewing' | 'offer' | 'rejected'

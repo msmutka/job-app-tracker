@@ -41,12 +41,13 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import type { JobApplication } from '@/types/JobApplication'
-import { addJob } from '@/services/jobService'
+import type { JobApplication } from './../types/JobApplication'
+import { addJob } from './../services/jobService'
 
 const router = useRouter()
 
 const job = ref<JobApplication>({
+  id: null,
   company: '',
   title: '',
   stage: 'applied',

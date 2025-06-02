@@ -1,4 +1,4 @@
-import type { JobApplication } from '@/types/JobApplication'
+import type { JobApplication } from './../types/JobApplication'
 
 const API_BASE = 'http://localhost:5158/JobApplications'
 

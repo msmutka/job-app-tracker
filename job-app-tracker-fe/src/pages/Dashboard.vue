@@ -13,7 +13,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="job in jobs" :key="job.id">
+        <tr v-for="job in jobs" :key="job.id+job.title">
           <td>{{ job.company }}</td>
           <td>{{ job.title }}</td>
           <td>{{ job.stage }}</td>
@@ -26,8 +26,8 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { getAllJobs } from '@/services/jobService'
-import type { JobApplication } from '@/types/JobApplication'
+import { getAllJobs } from './../services/jobService'
+import type { JobApplication } from './../types/JobApplication'
 
 const jobs = ref<JobApplication[]>([])
 
