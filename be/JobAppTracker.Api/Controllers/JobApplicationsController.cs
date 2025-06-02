@@ -10,10 +10,12 @@ namespace JobAppTracker.Api.Controllers
     public class JobApplicationsController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly IMessageBusPublisher _messageBus;
 
-        public JobApplicationsController(AppDbContext context)
+        public JobApplicationsController(AppDbContext context, IMessageBusPublisher messageBus)
         {
             _context = context;
+            _messageBus = messageBus;
         }
 
         [HttpGet]
@@ -37,6 +39,7 @@ namespace JobAppTracker.Api.Controllers
             job.AppliedOn = DateTime.UtcNow;
             _context.JobApplications.Add(job);
             await _context.SaveChangesAsync();
+            await _messageBus.PublishJobCreatedAsync(job);
             return CreatedAtAction(nameof(GetById), new { id = job.Id }, job);
         }
 
